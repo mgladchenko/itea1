@@ -1,6 +1,7 @@
+# Intellij tmp files/folders
 *.iml
-.idea
-target
+.idea/
+/target
 # Compiled class file
 *.class
 

@@ -21,26 +21,21 @@ public class LinkedinLoginTest {
 
 	@Test
 	public void successfulLoginTest() {
-		String initialPageTitle = driver.getTitle();
-		String initialPageUrl = driver.getCurrentUrl();
-		Assert.assertEquals(initialPageTitle, "LinkedIn: Log In or Sign Up", "Login page title is wrong");
-		//WebElement emailField = driver.findElement(By.xpath("//*[@id='login-email']"));
-		WebElement emailField = driver.findElement(By.id("login-email"));
-		WebElement passwordField = driver.findElement(By.id("login-password"));
-		WebElement signInButton = driver.findElement(By.id("login-submit"));
+		LinkedinLoginPage loginPage = new LinkedinLoginPage(driver);
 
-		emailField.sendKeys("iteatest@i.ua");
-		passwordField.sendKeys("1q2w3e_4r");
-		signInButton.click();
+		String initialPageTitle = loginPage.getPageTitle();
+		String initialPageUrl = loginPage.getPageUrl();
 
-		WebElement userIcon = driver.findElement(By.id("profile-nav-item"));
-		Assert.assertTrue(userIcon.isDisplayed(), "User icon was not displayed");
+		Assert.assertEquals(initialPageTitle, "LinkedIn: Log In or Sign Up",
+				"Login page title is wrong");
 
-		Assert.assertNotEquals(driver.getTitle(), initialPageTitle,
+		LinkedinBasePage homePage = loginPage.loginAs("iteatest@i.ua", "1q2w3e_4r5t");
+		Assert.assertTrue(homePage.isSignedIn(), "User is not signed in");
+
+		Assert.assertNotEquals(homePage.getPageTitle(), initialPageTitle,
 				"Page title did not change after login");
-		Assert.assertNotEquals(driver.getCurrentUrl(), initialPageUrl,
+		Assert.assertNotEquals(homePage.getPageUrl(), initialPageUrl,
 				"Page url did not change after login");
-
 	}
 
 	@Test
