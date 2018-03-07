@@ -1,3 +1,5 @@
+package test;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -7,6 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import page.LinkedinLandingPage;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +33,7 @@ public class LinkedinSearchTest {
 
 	@Test
 	public void basicSearchTest() throws InterruptedException {
-		LinkedinLoginPage loginPage = new LinkedinLoginPage(driver);
+		LinkedinLandingPage loginPage = new LinkedinLandingPage(driver);
 		loginPage.loginAs("iteatest@i.ua", "1q2w3e_4r5t");
 
 		//search
