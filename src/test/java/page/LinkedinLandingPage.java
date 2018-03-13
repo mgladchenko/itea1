@@ -18,6 +18,7 @@ public class LinkedinLandingPage extends LinkedinBasePage{
 
 	public LinkedinLandingPage(WebDriver driver){
 		super(driver);
+
 		PageFactory.initElements(driver, this);
 	}
 
@@ -26,11 +27,14 @@ public class LinkedinLandingPage extends LinkedinBasePage{
 		emailField.sendKeys(email);
 		passwordField.sendKeys(password);
 		signInButton.click();
-		if (signInButton.isDisplayed()) {
-			return (T) this;
+		if (getPageUrl().contains("/feed")) {
+			return (T) new LinkedinHomePage(driver);
+		}
+		if (getPageUrl().contains("/login-submit")) {
+			return (T) new LinkedinLoginPage(driver);
 		}
 		else {
-			return (T) PageFactory.initElements(driver, LinkedinHomePage.class);
+			return (T) this;
 		}
 	}
 

@@ -1,20 +1,16 @@
 package test;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import page.LinkedinHomePage;
 import page.LinkedinLandingPage;
+import page.LinkedinSearchPage;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static java.lang.Thread.sleep;
 
 public class LinkedinSearchTest {
 	WebDriver driver;
@@ -22,7 +18,6 @@ public class LinkedinSearchTest {
 	@BeforeMethod
 	public void beforeTest(){
 		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.get("https://www.linkedin.com/");
 	}
 
@@ -32,33 +27,19 @@ public class LinkedinSearchTest {
 	}
 
 	@Test
-	public void basicSearchTest() throws InterruptedException {
-		LinkedinLandingPage loginPage = new LinkedinLandingPage(driver);
-		loginPage.loginAs("iteatest@i.ua", "1q2w3e_4r5t");
-
-		//search
+	public void basicSearchTest(){
 		String searchTerm = "hr";
 
-		driver.findElement(By.xpath("//input[@placeholder='Search']")).sendKeys(searchTerm);
-		driver.findElement(By.xpath("//*[@type='search-icon']")).click();
-         //[contains(@class,'search-result__occluded-item')]
+		LinkedinLandingPage loginPage = new LinkedinLandingPage(driver);
+		LinkedinHomePage homePage = loginPage.loginAs("iteatest@i.ua", "1q2w3e_4r5t");
+		LinkedinSearchPage searchPage = homePage.searchByTerm(searchTerm);
+		List<String> results = searchPage.getResults();
 
-		sleep(3000);
-
-		List<WebElement> results = driver.findElements(By.xpath("//li[contains(@class,'search-result__occluded-item')]"));
-		//int currentResultsNumber = results.size();
 		Assert.assertEquals(results.size(), 10, "Number of results is wrong");
 
-		for (WebElement result : results) {
-			((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", result);
-			String cardTitle = result.getText();
-			System.out.println("XXXX");
-			System.out.println(cardTitle);
-			Assert.assertTrue(cardTitle.toLowerCase().contains(searchTerm),
-			"Searchterm "+searchTerm+ " not found in cart");
+		for (String result : results) {
+			Assert.assertTrue(result.toLowerCase().contains(searchTerm),
+					"Searchterm "+searchTerm+ " not found in cart");
 		}
-
-
-
 	}
 }
