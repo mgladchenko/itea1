@@ -17,7 +17,6 @@ public class LinkedinHomePage extends LinkedinBasePage{
 	private WebElement searchIcon;
 
 
-
 	public LinkedinHomePage(WebDriver driver) {
 		super(driver);
 		PageFactory.initElements(driver, this);
@@ -29,6 +28,7 @@ public class LinkedinHomePage extends LinkedinBasePage{
 	}
 
 	public LinkedinSearchPage searchByTerm(String searchTerm) {
+		waitUntilElementIsClickable(searchField);
 		searchField.sendKeys(searchTerm);
 		searchIcon.click();
 		return new LinkedinSearchPage(driver);
