@@ -4,6 +4,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
@@ -14,23 +15,25 @@ public class LinkedinBaseTest {
 	WebDriver driver;
 	LinkedinLandingPage landingPage;
 
-	@Parameters({ "browserType" })
+	@Parameters({"browserType", "envURL"})
 	@BeforeMethod
-	public void beforeTest(@Optional("firefox") String browserType){
-		if (browserType.toLowerCase().equals("firefox")) {
+	public void beforeTest(@Optional("chrome") String browserType, @Optional("https://ua.linkedin.com/") String envURL) {
+
+		switch (browserType.toLowerCase()){
+		case "firefox" :
 			WebDriverManager.firefoxdriver().setup();
 			driver = new FirefoxDriver();
-		}
-
-		if (browserType.toLowerCase().equals("chrome")) {
+			break;
+		case "chrome" :
 			WebDriverManager.chromedriver().setup();
 			driver = new ChromeDriver();
-		}
-		else {
-			System.out.println("Unsupported browser");
+			break;
+		default :
+			WebDriverManager.iedriver().setup();
+			driver = new InternetExplorerDriver();
 		}
 
-		driver.get("https://www.linkedin.com/");
+		driver.navigate().to(envURL);
 		landingPage = new LinkedinLandingPage(driver);
 	}
 

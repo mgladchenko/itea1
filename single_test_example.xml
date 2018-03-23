@@ -3,9 +3,12 @@
 <suite name="Login tests" verbose="1" >
     <test name="Firefox browser" >
         <parameter name="browserType" value="Chrome"/>
-        <parameter name="envURL" value="https://www.linkedin.com/" />
         <classes>
-            <class name="test.LinkedinLoginTest" />
-        </classes>
+        <class name="test.LinkedinLoginTest">
+            <methods>
+                <include name="successfulLoginTest" />
+            </methods>
+        </class>
+    </classes>
     </test>
 </suite>
