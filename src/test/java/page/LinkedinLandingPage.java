@@ -16,10 +16,17 @@ public class LinkedinLandingPage extends LinkedinBasePage{
 	@FindBy(id = "login-submit")
 	private WebElement signInButton;
 
+	@FindBy(xpath = "//a[@class='link-forgot-password']")
+	private WebElement forgotPasswordLink;
+
 	public LinkedinLandingPage(WebDriver driver){
 		super(driver);
-
 		PageFactory.initElements(driver, this);
+	}
+
+	public LinkedinRequestPasswordResetPage forgotPasswordLinkClick() {
+		forgotPasswordLink.click();
+		return new LinkedinRequestPasswordResetPage(driver);
 	}
 
 	public <T> T loginAs(String email, String password){
