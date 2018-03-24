@@ -10,7 +10,7 @@ public class LinkedinPasswordResetTest extends LinkedinBaseTest{
 	String userEmail = "iteatest@i.ua";
 
 	@Test
-	public void sucessfulPasswordReset() {
+	public void successfulPasswordReset() {
 		LinkedinRequestPasswordResetPage requestPasswordResetPage = landingPage.forgotPasswordLinkClick();
 		Assert.assertTrue(requestPasswordResetPage.isLoaded(), "requestPasswordResetPage is not loaded");
 
