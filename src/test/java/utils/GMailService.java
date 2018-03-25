@@ -1,3 +1,5 @@
+package utils;
+
 import com.sun.mail.imap.IdleManager;
 
 import javax.mail.*;
@@ -9,43 +11,25 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GmailService {
+public class GMailService {
 	String host = "imap.gmail.com";
-	String user = "iownit.tau@gmail.com";
-	String pass = "yourpassword";
+	String user = "Mykola.Gladchenko@gmail.com";
+	String pass = "your_pass_here";
 
 	private volatile boolean isMessageReceived = false;
 	private volatile String messageString;
 
 	public static void main(String[] args) {
-		String messageSubject = "Fwd: Iownit email verification";
-		String messageTo = "bfrow.tau@gmail.com";
-		String messageFrom = "Mykola Gladchenko <mykola_gladchenko@iownit.us>";
+		String messageSubjectPartial = "here's the link to reset your password";
+		String messageToPartial = "mykola.gladchenko@gmail.com";
+		String messageFromPartial = "security-noreply@linkedin.com";
 
-		GmailService gmailService = new GmailService();
-		String message = gmailService.waitForNewMessage(messageSubject, messageTo, messageFrom, 60);
+		GMailService GMailService = new GMailService();
+		String message = GMailService.waitForNewMessage(messageSubjectPartial, messageToPartial, messageFromPartial, 60);
 		System.out.println("Content: " + message);
 	}
 
-	private String getTextFromMimeMultipart(MimeMultipart mimeMultipart) throws MessagingException, IOException {
-		String result = "";
-		int count = mimeMultipart.getCount();
-		for (int i = 0; i < count; i++) {
-			BodyPart bodyPart = mimeMultipart.getBodyPart(i);
-			if (bodyPart.isMimeType("text/plain")) {
-				result = result + "\n" + bodyPart.getContent();
-				break; // without break same text appears twice in my tests
-			} else if (bodyPart.isMimeType("text/html")) {
-				String html = (String) bodyPart.getContent();
-				result = result + "\n" + org.jsoup.Jsoup.parse(html).text();
-			} else if (bodyPart.getContent() instanceof MimeMultipart) {
-				result = result + getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent());
-			}
-		}
-		return result;
-	}
-
-	public synchronized String waitForNewMessage(String messageSubject, String messageTo, String messageFrom,
+	public synchronized String waitForNewMessage(String messageSubjectPartial, String messageToPartial, String messageFromPartial,
 			long timeoutInSec) {
 		Properties properties = new Properties();
 		properties.put("mail.imap.usesocketchannels", "true");
@@ -58,8 +42,8 @@ public class GmailService {
 			try {
 				store.connect(host, user, pass);
 			} catch (AuthenticationFailedException e) {
-				throw new Exception("Make sure 'Allow less secure apps' is 'ON' on gmail account here "
-						+ "https://myaccount.google.com/lesssecureapps" + e);
+				throw new AuthenticationFailedException("Make sure 'Allow less secure apps' is 'ON' on gmail account here "
+						+ "https://myaccount.google.com/lesssecureapps" + "\n" + e.getMessage());
 			}
 
 			ExecutorService executorService = Executors.newCachedThreadPool();
@@ -72,14 +56,13 @@ public class GmailService {
 				public synchronized void messagesAdded(MessageCountEvent ev) {
 
 					try {
-						//Folder folder = (Folder) ev.getSource();
 						Message[] messages = ev.getMessages();
 						for (Message message : messages) {
 							String from = message.getFrom()[0].toString();
 							String to = message.getAllRecipients()[0].toString();
 							String subject = message.getSubject().toString();
 
-							if (from.equals(messageFrom) && to.equals(messageTo) && subject.equals(messageSubject)) {
+							if (from.contains(messageFromPartial) && to.contains(messageToPartial) && subject.contains(messageSubjectPartial)) {
 								isMessageReceived = true;
 								if (message.isMimeType("text/plain")) {
 									messageString = message.getContent().toString();
@@ -89,11 +72,10 @@ public class GmailService {
 								}
 								idleManager.stop();
 							}
-							idleManager.watch(inbox); // keep watching for new messages
 						}
 
 					} catch (MessagingException e) {
-						//e.printStackTrace();
+						e.printStackTrace();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -117,6 +99,24 @@ public class GmailService {
 			e.printStackTrace();
 		}
 		return messageString;
+	}
+
+	private String getTextFromMimeMultipart(MimeMultipart mimeMultipart) throws MessagingException, IOException {
+		String result = "";
+		int count = mimeMultipart.getCount();
+		for (int i = 0; i < count; i++) {
+			BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+			if (bodyPart.isMimeType("text/plain")) {
+				result = result + "\n" + bodyPart.getContent();
+				break;
+			} else if (bodyPart.isMimeType("text/html")) {
+				String html = (String) bodyPart.getContent();
+				result = result + "\n" + org.jsoup.Jsoup.parse(html).text();
+			} else if (bodyPart.getContent() instanceof MimeMultipart) {
+				result = result + getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent());
+			}
+		}
+		return result;
 	}
 
 }

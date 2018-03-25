@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class LinkedinBasePage {
+public abstract class LinkedinBasePage {
 	WebDriver driver;
 
 	public LinkedinBasePage (WebDriver driver){
@@ -34,7 +34,6 @@ public class LinkedinBasePage {
 		wait.until(ExpectedConditions.visibilityOf(webElement));
 	}
 
-
-
+	//public abstract boolean isLoaded();
 
 }
