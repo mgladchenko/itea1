@@ -1,6 +1,7 @@
 package page;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -35,5 +36,16 @@ public class LinkedinSearchPage extends LinkedinBasePage{
 		}
 
 		return resultsStringList;
+	}
+
+	public boolean isLoaded() {
+		boolean isLoaded;
+		try {
+			isLoaded = resultsNumber.isDisplayed();
+		}
+		catch (NoSuchElementException e){
+			isLoaded = false;
+		}
+		return isLoaded;
 	}
 }

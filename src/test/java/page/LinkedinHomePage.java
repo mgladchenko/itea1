@@ -1,5 +1,6 @@
 package page;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -32,5 +33,16 @@ public class LinkedinHomePage extends LinkedinBasePage{
 		searchField.sendKeys(searchTerm);
 		searchIcon.click();
 		return new LinkedinSearchPage(driver);
+	}
+
+	public boolean isLoaded() {
+		boolean isLoaded;
+		try {
+			isLoaded = userIcon.isDisplayed();
+		}
+		catch (NoSuchElementException e){
+			isLoaded = false;
+		}
+		return isLoaded;
 	}
 }

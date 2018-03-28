@@ -9,6 +9,9 @@ import java.util.List;
 
 public class LinkedinSearchTest extends LinkedinBaseTest{
 
+	/**
+	 * Test that verifies basic Search by specific Search term
+	 */
 	@Test
 	public void basicSearchTest(){
 		String searchTerm = "hr";

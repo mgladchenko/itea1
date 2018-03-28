@@ -6,18 +6,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class LinkedinLoginPage extends LinkedinBasePage{
+public class LinkedinPasswordChangedSuccessPage extends LinkedinBasePage{
 
-	@FindBy(id = "session_key-login")
-	private WebElement emailField;
+	@FindBy(xpath = "//div[@class='form-actions']/a[@href]")
+	private WebElement goToHomeButton;
 
-	@FindBy(id = "session_password-login")
-	private WebElement passwordField;
 
-	@FindBy(id = "btn-primary")
-	private WebElement signInButton;
-
-	public LinkedinLoginPage(WebDriver driver){
+	public LinkedinPasswordChangedSuccessPage(WebDriver driver){
 		super(driver);
 		PageFactory.initElements(driver, this);
 	}
@@ -25,13 +20,12 @@ public class LinkedinLoginPage extends LinkedinBasePage{
 	public boolean isLoaded() {
 		boolean isLoaded;
 		try {
-			isLoaded = emailField.isDisplayed();
+			isLoaded = goToHomeButton.isDisplayed();
 		}
 		catch (NoSuchElementException e){
 			isLoaded = false;
 		}
 		return isLoaded;
 	}
-
 
 }

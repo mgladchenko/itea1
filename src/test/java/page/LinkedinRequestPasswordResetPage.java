@@ -22,6 +22,7 @@ public class LinkedinRequestPasswordResetPage extends LinkedinBasePage{
 
 	public LinkedinPasswordResetSubmitPage submitEmail(String userEmail) {
 		userNameField.sendKeys(userEmail);
+		waitUntilElementIsClickable(submitButton);
 		submitButton.click();
 		return new LinkedinPasswordResetSubmitPage(driver);
 	}

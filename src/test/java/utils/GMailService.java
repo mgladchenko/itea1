@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 public class GMailService {
 	String host = "imap.gmail.com";
 	String user = "Mykola.Gladchenko@gmail.com";
-	String pass = "your_pass_here";
+	String pass = "ChangeMe!!!";
 
 	private volatile boolean isMessageReceived = false;
 	private volatile String messageString;

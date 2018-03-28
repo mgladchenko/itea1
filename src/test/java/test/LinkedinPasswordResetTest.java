@@ -2,13 +2,15 @@ package test;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import page.LinkedinChooseNewPasswordPage;
+import page.LinkedinPasswordChangedSuccessPage;
 import page.LinkedinPasswordResetSubmitPage;
 import page.LinkedinRequestPasswordResetPage;
-import utils.GMailService;
 
 public class LinkedinPasswordResetTest extends LinkedinBaseTest{
 
 	String userEmail = "mykola.gladchenko@gmail.com";
+	String newPassword = "Stanislav123";
 
 	@Test
 	public void successfulPasswordReset() {
@@ -16,19 +18,15 @@ public class LinkedinPasswordResetTest extends LinkedinBaseTest{
 		Assert.assertTrue(requestPasswordResetPage.isLoaded(), "requestPasswordResetPage is not loaded");
 
 		LinkedinPasswordResetSubmitPage passwordResetSubmitPage = requestPasswordResetPage.submitEmail(userEmail);
-		//Manually selected "email" option and "Submit" button. Need to automate.
-		//Assert.assertTrue(passwordResetSubmitPage.isLoaded(), "passwordResetSubmitPage is not loaded");
+		String resetPasswordLink = passwordResetSubmitPage.getResetPasswordLinkFromEmail(userEmail);
+		//entering capcha manually :)
+		Assert.assertTrue(passwordResetSubmitPage.isLoaded(), "passwordResetSubmitPage is not loaded");
 
-		//read email
-		String messageSubjectPartial = "here's the link to reset your password";
-		String messageToPartial = "mykola.gladchenko@gmail.com";
-		String messageFromPartial = "security-noreply@linkedin.com";
+		LinkedinChooseNewPasswordPage chooseNewPasswordPage = passwordResetSubmitPage.navigateToResetPasswordLink(resetPasswordLink);
+		Assert.assertTrue(chooseNewPasswordPage.isLoaded(), "chooseNewPasswordPage is not loaded");
 
-		GMailService GMailService = new GMailService();
-		String message = GMailService.waitForNewMessage(messageSubjectPartial, messageToPartial, messageFromPartial, 60);
-		System.out.println("Content: " + message);
-
-		//proceed with next steps here
+		LinkedinPasswordChangedSuccessPage passwordChangedSuccessPage = chooseNewPasswordPage.submitNewPassword(newPassword);
+		Assert.assertTrue(passwordChangedSuccessPage.isLoaded(), "passwordChangedSuccessPage is not loaded");
 
 	}
 }
