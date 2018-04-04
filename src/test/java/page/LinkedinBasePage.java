@@ -9,7 +9,9 @@ public abstract class LinkedinBasePage {
 	WebDriver driver;
 
 	/**
-	 * @param driver
+	 * Constructor of LinkedinBasePage class which takes WebDriver instance initialized in @BeforeMethod
+	 * for reuse in LinkedinBasePage class methods
+	 * @param driver - WebDriver instance
 	 */
 	public LinkedinBasePage (WebDriver driver){
 		this.driver = driver;
